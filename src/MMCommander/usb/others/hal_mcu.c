@@ -39,23 +39,25 @@ void halMcuInit(void)
 *
 * @return      none
 */
+#ifndef SDCC
 #pragma optimize=none
+#endif
 void halMcuWaitUs(uint16 usec)
 {
     usec>>= 1;          // Divide by 2 to achieve better resolution
 
     while(usec > 1)     // compare: ~13 cycles
     {
-        asm("NOP");     // 1 cycle/NOP
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
-        asm("NOP");
+        NOP();          // 1 cycle/NOP
+        NOP();
+        NOP();
+        NOP();
+        NOP();
+        NOP();
+        NOP();
+        NOP();
+        NOP();
+        NOP();
 
         usec--;        // decr: ~7 cycles
     }
@@ -74,7 +76,9 @@ void halMcuWaitUs(uint16 usec)
 *
 * @return      none
 */
+#ifndef SDCC
 #pragma optimize=none
+#endif
 void halMcuWaitMs(uint16 msec)
 {
     while(msec--)

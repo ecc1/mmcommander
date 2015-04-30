@@ -2,7 +2,7 @@
 
 char   __xdata txFilterEnabled; 
 
-char txFilter (char *message, int length)
+char txFilter (unsigned char *message, int length)
 {
   if (_TX_ENABLE_ == 0 ) return (1);
   

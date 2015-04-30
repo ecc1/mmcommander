@@ -52,8 +52,12 @@ void usbirqInit(uint16 irqMask)
  * Clears the P2 interrupt flag and converts all USB interrupt flags into events.
  * The interrupt also lets \ref usbsuspEnter() break from the suspend loop.
  */
+#ifdef SDCC
+void usbirqHandler(void) __interrupt (P2INT_VECTOR)
+#else
 #pragma vector=P2INT_VECTOR
 __interrupt void usbirqHandler(void)
+#endif
 {
    uint8 usbcif;
 
@@ -105,8 +109,12 @@ __interrupt void usbirqHandler(void)
  * This routine clears the USB resume interrupt flag, and makes sure that MCU does not return to power
  * mode 1 again until the the suspend loop has been exited.
  */
+#ifdef SDCC
+void usbirqResumeHandler(void) __interrupt (P0INT_VECTOR)
+#else
 #pragma vector = P0INT_VECTOR
 __interrupt void usbirqResumeHandler(void)
+#endif
 {
    uint8 flags;
 

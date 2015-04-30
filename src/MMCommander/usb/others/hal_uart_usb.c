@@ -26,8 +26,8 @@
 /************************************************************************************
 * GLOBAL VARIABLES
 */
-ringBuf_t rbRxBuf;
-ringBuf_t rbTxBuf;
+ringBuf_t __xdata rbRxBuf;
+ringBuf_t __xdata rbTxBuf;
 
 extern uint8 cdcCTS;
 

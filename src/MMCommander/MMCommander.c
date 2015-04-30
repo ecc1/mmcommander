@@ -27,8 +27,8 @@
 * GLOBAL VARIABLES
 */
 
-char   __xdata uartRxBuffer[SIZE_OF_UART_RX_BUFFER];
-char   __xdata uartTxBuffer[SIZE_OF_UART_TX_BUFFER];
+uint8  __xdata uartRxBuffer[SIZE_OF_UART_RX_BUFFER];
+uint8  __xdata uartTxBuffer[SIZE_OF_UART_TX_BUFFER];
 int    __xdata uartTxLength;
 int    __xdata uartTxIndex;
 int    __xdata uartRxIndex;
@@ -39,8 +39,8 @@ int    __xdata uartRxIndex;
 
 int main(void)
 {
-  char dataPacket[256];
-  char repPacket[3];
+  static uint8 __xdata dataPacket[256];
+  uint8 repPacket[3];
   char dataErr;
   unsigned int dataLength;
   char i;

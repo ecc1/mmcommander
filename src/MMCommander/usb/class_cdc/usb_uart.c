@@ -43,7 +43,7 @@ extern ringBuf_t rbTxBuf;
 /***********************************************************************************
  * GLOBAL VARIABLES
  */
-CDC_LINE_CODING_STRUCTURE __xdata currentLineCoding;
+CDC_LINE_CODING_STRUCTURE currentLineCoding;
 uint16 cdcRTS;              // Request-To-Send modem control line
 uint8  cdcCTS;              // Clear-To-Send   modem control line
 
@@ -250,7 +250,7 @@ static void usbOutProcess(void)
 
         // Get length of USB packet, this operation must not be interrupted.
         length = USBFW_GET_OUT_ENDPOINT_COUNT_LOW();
-        length+= USBFW_GET_OUT_ENDPOINT_COUNT_HIGH() >> 8;
+        // Ignore high byte since EP 4 FIFO size is 256.
 
         // Calculate number of bytes available in RF buffer; and the number
         // of bytes we may transfer in this operation.

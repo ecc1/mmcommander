@@ -14,10 +14,10 @@
 #include "hal_board.h"
 
 static __xdata uint8 usbsuspEnterXdata[14];
-static __xdata VFPTR pUsbsuspEnterXdata = NULL;
+static __xdata VFPTR pUsbsuspEnterXdata = 0;
 
-__xdata VFPTR pFnSuspendEnterHook=  NULL;
-__xdata VFPTR pFnSuspendExitHook=   NULL;
+__xdata VFPTR pFnSuspendEnterHook=  0;
+__xdata VFPTR pFnSuspendExitHook=   0;
 
 
 

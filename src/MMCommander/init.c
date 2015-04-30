@@ -34,7 +34,7 @@ void configureOsc (void)
 {
   SLEEP &= ~OSC_PD_BIT;     // powering down all oscillators
   while(!XOSC_STABLE);      // waiting until the oscillator is stable
-  asm("NOP");
+  NOP();
   CLKCON &= 0xF8;
   CLKCON &= ~MAIN_OSC_BITS; // starting the Crystal Oscillator
   SLEEP |= OSC_PD_BIT;      // powering down the unused oscillator

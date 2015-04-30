@@ -99,8 +99,8 @@
 #define BUILD_UINT16(loByte, hiByte) \
     ((uint16)(((loByte) & 0x00FF) + (((hiByte) & 0x00FF) << 8)))
 
-#define HI_UINT16(a) (((uint16)(a) >> 8) & 0xFF)
-#define LO_UINT16(a) ((uint16)(a) & 0xFF)
+#define HI_UINT16(a) ((uint8) (((uint16)(a) >> 8) & 0xFF))
+#define LO_UINT16(a) ((uint8) ((uint16)(a) & 0xFF))
 
 
 /* uint16 processing */
@@ -151,7 +151,11 @@
 * (The while condition below evaluates false without generating a
 *  constant-controlling-loop type of warning on most compilers.)
 */
+#ifdef SDCC
+#define st(x)      do { x } while (0)
+#else
 #define st(x)      do { x } while (__LINE__ == -1)
+#endif
 
 
 /***********************************************************************************

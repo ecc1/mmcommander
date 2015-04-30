@@ -1,15 +1,17 @@
+#include "hal_types.h"
+
 static short __xdata crc16Tab[256];
 
 char crc8 (char *message, unsigned int nBytes)
 {
   char remainder = 0;
   unsigned int byte;
-  char bit;
+  char b;
   
   for (byte=0; byte < nBytes; ++byte)
   {
     remainder ^= message[byte];
-    for (bit = 8; bit > 0; --bit)
+    for (b = 8; b > 0; --b)
     {
       if (remainder & 0x80)
         remainder = (remainder << 1) ^ 0x9B;
@@ -153,7 +155,9 @@ void decode4b6b (char *messageIn, unsigned int bytesIn, char *messageOut, unsign
   char recByte, nibbleFlag;
   char outBytes;
   
+  intBuffer = 0;
   intBitsAvailable = 0;
+  recByte = 0;
   nibbleFlag = 0;
   outBytes = 0;
   for (i=0; i<bytesIn; i++) {
@@ -170,6 +174,7 @@ void decode4b6b (char *messageIn, unsigned int bytesIn, char *messageOut, unsign
       nibbleFlag ^= 1;
       if (nibbleFlag == 0) {
         messageOut[outBytes] = recByte;
+        recByte = 0;
         outBytes++;
       }
       intBitsAvailable -= 6;
@@ -182,5 +187,5 @@ void decode4b6b (char *messageIn, unsigned int bytesIn, char *messageOut, unsign
 void sleep (int time)
 {
   int i,j;
-  for (j=0; j<time*4; j++) for (i=0; i<0xFFFF; i++) asm("nop");
+  for (j=0; j<time*4; j++) for (i=0; i<0xFFFF; i++) NOP();
 }

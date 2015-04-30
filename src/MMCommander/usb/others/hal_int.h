@@ -68,6 +68,12 @@ typedef unsigned short istate_t;
 #define HAL_INT_LOCK(x)    st( (x) = EA; EA = 0; )
 #define HAL_INT_UNLOCK(x)  st( EA = (x); )
 
+#elif defined SDCC
+
+#define HAL_INT_ON(x)      st( EA = 1; )
+#define HAL_INT_OFF(x)     st( EA = 0; )
+#define HAL_INT_LOCK(x)    st( (x) = EA; EA = 0; )
+#define HAL_INT_UNLOCK(x)  st( EA = (x); )
 
 
 #else

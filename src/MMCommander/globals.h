@@ -5,8 +5,8 @@
 #include "hal_types.h"
 #include "constants.h"
 
-extern char   __xdata uartRxBuffer[SIZE_OF_UART_RX_BUFFER];
-extern char   __xdata uartTxBuffer[SIZE_OF_UART_RX_BUFFER];
+extern uint8  __xdata uartRxBuffer[SIZE_OF_UART_RX_BUFFER];
+extern uint8  __xdata uartTxBuffer[SIZE_OF_UART_RX_BUFFER];
 extern int    __xdata uartTxLength;
 extern int    __xdata uartTxIndex;
 extern int    __xdata uartRxIndex;

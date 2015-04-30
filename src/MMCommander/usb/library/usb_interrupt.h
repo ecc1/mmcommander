@@ -164,8 +164,13 @@ void usbirqHookProcessEvents(void);
 //-------------------------------------------------------------------------------------------------------
 // Function prototypes
 void usbirqInit(uint16 irqMask);
+#ifdef SDCC
+void usbirqHandler(void) __interrupt;
+void usbirqResumeHandler(void) __interrupt;
+#else
 __near_func __interrupt void usbirqHandler(void);
 __near_func __interrupt void usbirqResumeHandler(void);
+#endif
 //-------------------------------------------------------------------------------------------------------
 
 

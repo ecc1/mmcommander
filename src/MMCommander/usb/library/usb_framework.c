@@ -14,7 +14,7 @@
 #include "hal_board.h"
 
 // Function pointer used by usbfwSetupHandler()
-static VFPTR __data ProcessFunc;
+static __data VFPTR ProcessFunc;
 
 /** \brief Initializes the USB framework
  *

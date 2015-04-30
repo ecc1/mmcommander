@@ -380,7 +380,7 @@ static void ConfigureEndpoints(USB_INTERFACE_DESCRIPTOR __code *pInterface)
    uint8 csRegValue;
    uint8 endpoint;
    USB_ENDPOINT_DESCRIPTOR __code *pEndpoint;
-   DBLBUF_LUT_INFO __code *pUsbDblbufLutInfo;
+   DBLBUF_LUT_INFO __code *pUsbDblbufLutInfo = 0;
 
    // Locate the double buffer settings
    if (pInterface->bNumEndpoints) {

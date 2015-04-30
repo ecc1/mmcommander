@@ -9,8 +9,12 @@
 #include "txFilter.h"
 
 // Globals
+#ifdef SDCC
+void PORT1_ISR(void) __interrupt (P1INT_VECTOR)
+#else
 #pragma vector = P1INT_VECTOR
 __interrupt void PORT1_ISR(void)
+#endif
 {
   int i,j;
   int modeChange;
@@ -22,7 +26,7 @@ __interrupt void PORT1_ISR(void)
    
   modeChange = 1;
   for (j=0; j<0x20; j++) {
-    for (i=0; i<0xFFFF; i++) asm("nop");
+    for (i=0; i<0xFFFF; i++) NOP();
     if (P1_2 == 1) {
       modeChange = 0;
       j=0x20;
@@ -65,8 +69,12 @@ void enablePushButtonInt (void)
   EA = 1; IEN2 |= IEN2_P1IE;  
 }
 
+#ifdef SDCC
+void TIMER1_ISR(void) __interrupt (T1_VECTOR)
+#else
 #pragma vector = T1_VECTOR
 __interrupt void TIMER1_ISR(void)
+#endif
 {
   // Stop Timer 1
   T1CTL &= 0xFC;

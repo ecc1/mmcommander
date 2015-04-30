@@ -139,6 +139,19 @@ typedef unsigned short istate_t;
 
 
 /*****************************************************
+ * Linux sdcc and cc1111
+ */
+#elif defined SDCC
+#define CODE  __code
+#define XDATA __xdata
+#define FAR   __far
+#define NOP() __asm nop __endasm
+#define __generic
+
+typedef unsigned short istate_t;
+
+
+/*****************************************************
  * Other compilers
  */
 #else

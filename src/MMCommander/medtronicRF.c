@@ -11,12 +11,12 @@
 #include "interrupts.h"
 
 // Globals
-static char   __xdata rfMessage[512];
+static uint8  __xdata rfMessage[512];
 static unsigned int __xdata rfLength;
-static int    __xdata txCalcCRC;
-static int    __xdata txCalcCRC16;
-static char   __xdata txLength;
-static int    __xdata txTimes;
+int    __xdata txCalcCRC;
+int    __xdata txCalcCRC16;
+char   __xdata txLength;
+int    __xdata txTimes;
 static char   __xdata lastData;
 
 void sendMedtronicMessage (char *message, unsigned int length, int times)
@@ -38,7 +38,7 @@ void sendMedtronicMessage (char *message, unsigned int length, int times)
      
      i=4096;
      /* Add NOP to avoid that the loop is optimized away */
-     while(--i) asm (" NOP"); 
+     while(--i) NOP();
     }
   
   PKTLEN = 0xFF;
@@ -102,7 +102,7 @@ char receiveMedtronicMessage (char *message, unsigned int *length)
 
 void usbReceiveData (void)
 {
-  char  tempData[128];
+  static char __xdata tempData[128];
   short tmpCRC16;
   unsigned int nBytes,readBytes;
   unsigned int i;
