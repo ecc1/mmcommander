@@ -145,6 +145,24 @@ extern USB_DESCRIPTOR_MARKER __xdata usbDescriptorMarker; ///< USB descriptor ma
 
 //-------------------------------------------------------------------------------------------------------
 
+#ifdef SDCC
+
+extern __code struct usb_descriptor {
+    USB_DEVICE_DESCRIPTOR device;
+    USB_CONFIGURATION_DESCRIPTOR configuration;
+    USB_INTERFACE_DESCRIPTOR interface0;
+    uint8 class_specific[19];  // CDC class-specific descriptors
+    USB_ENDPOINT_DESCRIPTOR endpoint0;
+    USB_INTERFACE_DESCRIPTOR interface1;
+    USB_ENDPOINT_DESCRIPTOR endpoint1;
+    USB_ENDPOINT_DESCRIPTOR endpoint2;
+    uint8 string_descriptors[58];
+} usbDesc;
+
+extern __code DBLBUF_LUT_INFO usbDblbufLut[];
+
+#else
+
 // Import marker symbols for the USB descriptor to use (from <app>_usb_descriptor.s51)
 // They need to be defined here or in application FW
 // The source file <app>_usb_descriptor.s51 need to use these names, or update
@@ -155,6 +173,8 @@ extern void __code* usbDescLut;         ///< Pointer to start of lookup table fo
 extern void __code* usbDescLutEnd;      ///< Pointer to end of lookup table for non-standard USB descriptors
 extern void __code* usbDblbufLut;       ///< Pointer to start of lookup table for endpoints' double-buffer settings
 extern void __code* usbDblbufLutEnd;    ///< Pointer to end of lookup table for endpoints' double-buffer settings
+
+#endif
 //@}
 
 

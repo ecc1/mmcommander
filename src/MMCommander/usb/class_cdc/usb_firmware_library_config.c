@@ -21,12 +21,21 @@
 
 // Declaration of global USB descriptor pointers
 USB_DESCRIPTOR_MARKER __xdata usbDescriptorMarker= {
+#ifdef SDCC
+    (uint8 *)&usbDesc,
+    (uint8 *)(&((&usbDesc)[1])),
+    (DESC_LUT_INFO *)(&((&usbDesc)[1])),
+    (DESC_LUT_INFO *)(&((&usbDesc)[1])),
+    usbDblbufLut,
+    usbDblbufLut + 2
+#else
     (uint8 __code *)&usbDescStart,
     (uint8 __code *)&usbDescEnd,
     (DESC_LUT_INFO __code *) &usbDescLut,
     (DESC_LUT_INFO __code *) &usbDescLutEnd,
     (DBLBUF_LUT_INFO __code *) &usbDblbufLut,
     (DBLBUF_LUT_INFO __code *) &usbDblbufLutEnd
+#endif
 };
 
 /// @}

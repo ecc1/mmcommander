@@ -9,8 +9,6 @@ DEFINES = -Dchip=1111 -DBOARD=BOARD_$(BOARD) -DBAUD_RATE=$(BAUD_RATE)
 INCLUDES = -I. -Iusb/others -Iusb/class_cdc -Iusb/library -Imisc
 CODEFLAGS = --model-small --opt-code-speed --stack-auto
 CFLAGS = $(DEFINES) $(INCLUDES) $(CODEFLAGS) -Wp,-Wall,-MD,$(@:%.rel=%.d),-MT,$@
-CPPFLAGS = $(DEFINES) $(INCLUDES) -P -Wall -MD $(@:%.asm=%.d) -MT $@
-ASFLAGS = -l -o
 LDFLAGS = --out-fmt-ihx \
 	  --code-loc 0x000 --code-size 0x8000 \
 	  --xram-loc 0xF000 --xram-size 0xF00 \
@@ -29,6 +27,7 @@ CFILES = \
 	misc/delay.c \
 	misc/led.c \
 	misc/serial.c \
+	usb/class_cdc/usb_cdc_descriptor.c \
 	usb/class_cdc/usb_cdc_hooks.c \
 	usb/class_cdc/usb_firmware_library_config.c \
 	usb/class_cdc/usb_uart.c \
@@ -44,8 +43,6 @@ CFILES = \
 	usb/others/util_buffer.c \
 	# end of list
 
-SFILES = usb/class_cdc/usb_cdc_descriptor.s
-
 # Disable some warnings
 
 # unreachable code (constants used for conditional compilation)
@@ -59,7 +56,7 @@ usb/library/usb_framework.rel usb/others/hal_mcu.rel: CFLAGS += --disable-warnin
 
 all: $(PROGRAMS:%=%.hex)
 
-OBJS = $(CFILES:%.c=%.rel) $(SFILES:%.s=%.rel)
+OBJS = $(CFILES:%.c=%.rel)
 
 $(LIBRARY): $(OBJS)
 	sdcclib $@ $(OBJS)
@@ -78,23 +75,6 @@ else
 	@echo CC $< && $(CC) -c $(CFLAGS) -o $@ $<
 endif
 
-# Keep .asm files created by preprocessing .s files
-.SECONDARY: $(SFILES:%.s=%.asm)
-
-%.asm: %.s
-ifdef VERBOSE
-	$(CPP) $(CPPFLAGS) -o $@ $<
-else
-	@echo CPP $< && $(CPP) $(CPPFLAGS) -o $@ $<
-endif
-
-%.rel: %.asm
-ifdef VERBOSE
-	$(AS) $(ASFLAGS) $<
-else
-	@echo AS $< && $(AS) $(ASFLAGS) $<
-endif
-
 BYPRODUCTS = *.asm *.d *.lib *.lnk *.lst *.map *.mem *.rel *.rst *.sym *~
 
 clean:
@@ -103,6 +83,6 @@ clean:
 	    (cd $$dir && rm -f $(if $(VERBOSE),-v) $(BYPRODUCTS)); \
 	done
 
-DEPS = $(PROGRAMS:%=%.d) $(CFILES:%.c=%.d) $(SFILES:%.s=%.d)
+DEPS = $(PROGRAMS:%=%.d) $(CFILES:%.c=%.d)
 
 -include $(DEPS)
