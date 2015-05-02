@@ -126,7 +126,7 @@ void usbUartProcess(void)
     if (cdcCTS && cdcRTS) {
 
         // Process USB OUT data (USB -> RF)
-        usbOutProcess();
+//        usbOutProcess();
 
         // Process USB IN data (RF -> USB)
         usbInProcess();

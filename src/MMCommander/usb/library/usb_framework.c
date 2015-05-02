@@ -80,6 +80,7 @@ void usbfwSetupHandler(void)
    uint8 controlReg;
    uint8 bytesNow;
    uint8 oldEndpoint;
+   extern void blink(int, int); blink(3, 100);
 
    // Save the old index setting, then select endpoint 0 and fetch the control register
    oldEndpoint = USBFW_GET_SELECTED_ENDPOINT();
@@ -124,7 +125,7 @@ void usbfwSetupHandler(void)
 
    // Let the application handle the reception
    } else if (usbfwData.ep0Status == EP_MANUAL_RX) {
-      ProcessFunc();
+      if (ProcessFunc) ProcessFunc();
    }
 
    // Receive SETUP header
@@ -218,7 +219,7 @@ void usbfwSetupHandler(void)
 
    // Let the application handle the transmission
    } else if (usbfwData.ep0Status == EP_MANUAL_TX) {
-      ProcessFunc();
+      if (ProcessFunc) ProcessFunc();
    }
 
    // Restore the old index setting
