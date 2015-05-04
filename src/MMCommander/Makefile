@@ -1,6 +1,4 @@
 CC = sdcc
-CPP = sdcpp
-AS = sdas8051
 
 BOARD = SRF_STICK
 BAUD_RATE = 115200
