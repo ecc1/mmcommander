@@ -80,7 +80,6 @@ void usbfwSetupHandler(void)
    uint8 controlReg;
    uint8 bytesNow;
    uint8 oldEndpoint;
-   extern void blink(int, int); blink(3, 100);
 
    // Save the old index setting, then select endpoint 0 and fetch the control register
    oldEndpoint = USBFW_GET_SELECTED_ENDPOINT();

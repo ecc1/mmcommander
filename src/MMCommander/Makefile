@@ -92,7 +92,6 @@ clean:
 	done
 
 TEST_CFILES =  usbtest.c \
-	blink.c \
 	init.c \
 	interrupts.c \
 	txFilter.c \
