@@ -42,13 +42,13 @@ SFILES = usb/class_cdc/usb_cdc_descriptor.s
 init.rel txFilter.rel: CFLAGS += --disable-warning 126
 
 # unreferenced function arguments
-usb/class_cdc/usb_cdc_hooks.rel usb/others/hal_led.rel usb/others/hal_mcu.rel usb/others/hal_uart_usb.rel: CFLAGS += --disable-warning 85
+usb/class_cdc/usb_cdc_hooks.rel usb/others/hal_led.rel usb/others/hal_mcu.rel usb/others/hal_uart_cc8051.rel usb/others/hal_uart_usb.rel: CFLAGS += --disable-warning 85
 
 # control flow changed by optimizer
 usb/library/usb_framework.rel usb/others/hal_mcu.rel: CFLAGS += --disable-warning 110
 
 #all: MMCommander.hex
-all: usbtest.hex
+all: serialtest.hex
 
 OBJS = $(CFILES:%.c=%.rel) $(SFILES:%.s=%.rel)
 
@@ -91,30 +91,16 @@ clean:
 	    (cd $$dir && rm -f $(if $(VERBOSE),-v) $(BYPRODUCTS)); \
 	done
 
-TEST_CFILES =  usbtest.c \
-	init.c \
-	interrupts.c \
-	txFilter.c \
-	usb/class_cdc/usb_cdc_descriptor.c \
-	usb/class_cdc/usb_cdc_hooks.c \
-	usb/class_cdc/usb_firmware_library_config.c \
-	usb/class_cdc/usb_uart.c \
-	usb/library/usb_descriptor_parser.c \
-	usb/library/usb_framework.c \
-	usb/library/usb_interrupt.c \
-	usb/library/usb_standard_requests.c \
-	usb/library/usb_suspend.c \
+TEST_CFILES =  serialtest.c \
+	blink.c \
 	usb/others/clock.c \
-	usb/others/hal_int.c \
 	usb/others/hal_led.c \
 	usb/others/hal_mcu.c \
-	usb/others/hal_uart_usb.c \
-	usb/others/util_buffer.c \
 	# end of list
 
 TESTOBJS = $(TEST_CFILES:%.c=%.rel)
 
-usbtest.hex: $(TESTOBJS)
+serialtest.hex: $(TESTOBJS)
 ifdef VERBOSE
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TESTOBJS)
 else
