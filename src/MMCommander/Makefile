@@ -5,13 +5,15 @@ AS = sdas8051
 DEFINES = -Dchip=1111
 INCLUDES = -I. -Iusb/others -Iusb/class_cdc -Iusb/library -Imisc
 CODEFLAGS = --model-small --opt-code-speed --stack-auto
-CFLAGS = $(DEFINES) $(INCLUDES) $(CODEFLAGS) -Wp,-MD,$(@:%.rel=%.d),-MT,$@
-CPPFLAGS = $(DEFINES) $(INCLUDES) -P -MD $(@:%.asm=%.d) -MT $@
+CFLAGS = $(DEFINES) $(INCLUDES) $(CODEFLAGS) -Wp,-Wall,-MD,$(@:%.rel=%.d),-MT,$@
+CPPFLAGS = $(DEFINES) $(INCLUDES) -P -Wall -MD $(@:%.asm=%.d) -MT $@
 ASFLAGS = -l -o
 LDFLAGS = --out-fmt-ihx \
 	  --code-loc 0x000 --code-size 0x8000 \
 	  --xram-loc 0xF000 --xram-size 0xF00 \
 	  --iram-size 0x100
+
+PROG = MMCommander
 
 CFILES = MMCommander.c \
 	crc_4b6b.c \
@@ -47,12 +49,9 @@ usb/class_cdc/usb_cdc_hooks.rel usb/others/hal_led.rel usb/others/hal_mcu.rel us
 # control flow changed by optimizer
 usb/library/usb_framework.rel usb/others/hal_mcu.rel: CFLAGS += --disable-warning 110
 
-#all: MMCommander.hex
-all: serialtest.hex
-
 OBJS = $(CFILES:%.c=%.rel) $(SFILES:%.s=%.rel)
 
-MMCommander.hex: $(OBJS)
+$(PROG).hex: $(OBJS)
 ifdef VERBOSE
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
 else
@@ -83,29 +82,35 @@ else
 	@echo AS $< && $(AS) $(ASFLAGS) $<
 endif
 
+TEST_PROG = serialtest
+
+TEST_CFILES =  $(TEST_PROG).c \
+	misc/delay.c \
+	misc/led.c \
+	misc/serial.c \
+	usb/others/clock.c \
+	# end of list
+
+TEST_OBJS = $(TEST_CFILES:%.c=%.rel)
+
+test: $(TEST_PROG).hex
+
+all: $(PROG).hex $(TEST_PROG).hex
+
+$(TEST_PROG).hex: $(TEST_OBJS)
+ifdef VERBOSE
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TEST_OBJS)
+else
+	@echo LD $@ && $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TEST_OBJS)
+endif
+
 BYPRODUCTS = *.asm *.d *.lnk *.lst *.map *.mem *.rel *.rst *.sym *~
 
 clean:
-	@for dir in $(sort $(dir $(CFILES) $(SFILES))); do \
+	@for dir in $(sort $(dir $(CFILES) $(SFILES) $(TEST_CFILES))); do \
 	    echo Cleaning  $$dir; \
 	    (cd $$dir && rm -f $(if $(VERBOSE),-v) $(BYPRODUCTS)); \
 	done
-
-TEST_CFILES =  serialtest.c \
-	blink.c \
-	usb/others/clock.c \
-	usb/others/hal_led.c \
-	usb/others/hal_mcu.c \
-	# end of list
-
-TESTOBJS = $(TEST_CFILES:%.c=%.rel)
-
-serialtest.hex: $(TESTOBJS)
-ifdef VERBOSE
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TESTOBJS)
-else
-	@echo LD $@ && $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TESTOBJS)
-endif
 
 DEPS = $(CFILES:%.c=%.d) $(SFILES:%.s=%.d) $(TEST_CFILES:%.c=%.d)
 
