@@ -13,14 +13,19 @@ LDFLAGS = --out-fmt-ihx \
 	  --xram-loc 0xF000 --xram-size 0xF00 \
 	  --iram-size 0x100
 
-PROG = MMCommander
+PROGRAMS = MMCommander serialtest delaytest usbtest
 
-CFILES = MMCommander.c \
+LIBRARY = modules.lib
+
+CFILES = \
 	crc_4b6b.c \
 	init.c \
 	interrupts.c \
 	medtronicRF.c \
 	txFilter.c \
+	misc/delay.c \
+	misc/led.c \
+	misc/serial.c \
 	usb/class_cdc/usb_cdc_hooks.c \
 	usb/class_cdc/usb_firmware_library_config.c \
 	usb/class_cdc/usb_uart.c \
@@ -49,13 +54,18 @@ usb/class_cdc/usb_cdc_hooks.rel usb/others/hal_led.rel usb/others/hal_mcu.rel us
 # control flow changed by optimizer
 usb/library/usb_framework.rel usb/others/hal_mcu.rel: CFLAGS += --disable-warning 110
 
+all: $(PROGRAMS:%=%.hex)
+
 OBJS = $(CFILES:%.c=%.rel) $(SFILES:%.s=%.rel)
 
-$(PROG).hex: $(OBJS)
+$(LIBRARY): $(OBJS)
+	sdcclib $@ $(OBJS)
+
+%.hex: %.rel $(LIBRARY)
 ifdef VERBOSE
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBRARY)
 else
-	@echo LD $@ && $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
+	@echo LD $@ && $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBRARY)
 endif
 
 %.rel: %.c
@@ -82,36 +92,14 @@ else
 	@echo AS $< && $(AS) $(ASFLAGS) $<
 endif
 
-TEST_PROG = serialtest
-
-TEST_CFILES =  $(TEST_PROG).c \
-	misc/delay.c \
-	misc/led.c \
-	misc/serial.c \
-	usb/others/clock.c \
-	# end of list
-
-TEST_OBJS = $(TEST_CFILES:%.c=%.rel)
-
-test: $(TEST_PROG).hex
-
-all: $(PROG).hex $(TEST_PROG).hex
-
-$(TEST_PROG).hex: $(TEST_OBJS)
-ifdef VERBOSE
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TEST_OBJS)
-else
-	@echo LD $@ && $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(TEST_OBJS)
-endif
-
 BYPRODUCTS = *.asm *.d *.lnk *.lst *.map *.mem *.rel *.rst *.sym *~
 
 clean:
-	@for dir in $(sort $(dir $(CFILES) $(SFILES) $(TEST_CFILES))); do \
+	@for dir in $(sort $(dir $(PROGRAMS) $(OBJS))); do \
 	    echo Cleaning  $$dir; \
 	    (cd $$dir && rm -f $(if $(VERBOSE),-v) $(BYPRODUCTS)); \
 	done
 
-DEPS = $(CFILES:%.c=%.d) $(SFILES:%.s=%.d) $(TEST_CFILES:%.c=%.d)
+DEPS = $(PROGRAMS:%=%.d) $(CFILES:%.c=%.d) $(SFILES:%.s=%.d)
 
 -include $(DEPS)
