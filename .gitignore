@@ -1,5 +1,7 @@
 *.asm
 *.d
+*.hex
+*.lib
 *.lnk
 *.lst
 *.map
