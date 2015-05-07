@@ -190,7 +190,9 @@ string2DescEnd:
 string3Desc:	; Serial number
 		.db string3DescEnd - string3Desc
 		.db DESC_TYPE_STRING	; bDescriptorType
-		.ascii "0\00\01\0"
+		.ascii "0\0"
+		.ascii "0\0"
+		.ascii "1\0"
 string3DescEnd:
 
 _usbDescEnd:
