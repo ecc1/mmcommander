@@ -92,7 +92,7 @@ else
 	@echo AS $< && $(AS) $(ASFLAGS) $<
 endif
 
-BYPRODUCTS = *.asm *.d *.lnk *.lst *.map *.mem *.rel *.rst *.sym *~
+BYPRODUCTS = *.asm *.d *.lib *.lnk *.lst *.map *.mem *.rel *.rst *.sym *~
 
 clean:
 	@for dir in $(sort $(dir $(PROGRAMS) $(OBJS))); do \
