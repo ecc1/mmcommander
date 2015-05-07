@@ -13,7 +13,7 @@ LDFLAGS = --out-fmt-ihx \
 	  --xram-loc 0xF000 --xram-size 0xF00 \
 	  --iram-size 0x100
 
-PROGRAMS = MMCommander serialtest delaytest usbtest
+PROGRAMS = MMCommander delaytest mmtest serialtest usbtest
 
 LIBRARY = modules.lib
 
