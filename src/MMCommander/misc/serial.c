@@ -8,7 +8,6 @@ void serial_init(void) {
     U0CSR |= UxCSR_MODE_UART;
 
     // TX on P0_3, RX on P0_2
-    P0SEL |= (1 << 3) | (1 << 2);
     P0DIR |= (1 << 3);
     P0DIR &= ~(1 << 2);
 
@@ -23,6 +22,10 @@ void serial_init(void) {
              UxUCR_SPB_1_STOP_BIT |
              UxUCR_STOP_HIGH |
              UxUCR_START_LOW);
+
+    // select peripheral function rather than GPIO for TX on P0_3
+    // (not required for RX on P0_2)
+    P0SEL |= (1 << 3);
 }
 
 void serial_putc(char c) {
