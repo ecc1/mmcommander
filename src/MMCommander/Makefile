@@ -2,7 +2,10 @@ CC = sdcc
 CPP = sdcpp
 AS = sdas8051
 
-DEFINES = -Dchip=1111
+BOARD = SRF_STICK
+BAUD_RATE = 115200
+
+DEFINES = -Dchip=1111 -DBOARD=BOARD_$(BOARD) -DBAUD_RATE=$(BAUD_RATE)
 INCLUDES = -I. -Iusb/others -Iusb/class_cdc -Iusb/library -Imisc
 CODEFLAGS = --model-small --opt-code-speed --stack-auto
 CFLAGS = $(DEFINES) $(INCLUDES) $(CODEFLAGS) -Wp,-Wall,-MD,$(@:%.rel=%.d),-MT,$@
