@@ -30,14 +30,11 @@ int main(void)
     char i;
 
     /* Configure system */
-    initGlobals();
-    configureIO();
     configureOsc();
     serial_init();
     crc16Init();
     configureMedtronicRFMode();
-    enablePushButtonInt();
-    
+
     /* Reception loop */
     while (1) {
         dataErr = receiveMedtronicMessage(dataPacket, &dataLength); 
