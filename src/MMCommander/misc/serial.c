@@ -11,9 +11,19 @@ void serial_init(void) {
     P0DIR |= (1 << 3);
     P0DIR &= ~(1 << 2);
 
-    // 9600 baud
+#if BAUD_RATE==9600
     U0BAUD = 163;
     U0GCR = 8;
+#elif BAUD_RATE==57600
+    U0BAUD = 59;
+    U0GCR = 11;
+#elif BAUD_RATE==115200
+    U0BAUD = 59;
+    U0GCR = 12;
+#else
+#error "BAUD_RATE is undefined"
+#endif
+
     U0UCR = (UxUCR_FLUSH |
              UxUCR_FLOW_DISABLE |
              UxUCR_D9_EVEN_PARITY |
